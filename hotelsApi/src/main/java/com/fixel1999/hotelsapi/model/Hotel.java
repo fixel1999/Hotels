@@ -1,6 +1,5 @@
 package com.fixel1999.hotelsapi.model;
 
-import com.fixel1999.hotelsapi.model.Address;
 import jakarta.persistence.*;
 import lombok.Data;
 
