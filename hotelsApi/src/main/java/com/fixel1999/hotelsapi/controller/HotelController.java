@@ -32,8 +32,8 @@ public class HotelController {
         return hotelService.getAll();
     }
 
-    @GetMapping("/findByCity")
-    public List<Hotel> findByCity(@RequestBody String city) {
+    @GetMapping("/findByCity/{city}")
+    public List<Hotel> findByCity(@PathVariable String city) {
         return hotelService.findByCity(city);
     }
 
