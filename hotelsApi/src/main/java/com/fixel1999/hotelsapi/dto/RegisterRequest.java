@@ -2,7 +2,7 @@ package com.fixel1999.hotelsapi.dto;
 
 import com.fixel1999.hotelsapi.model.Role;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class RegisterRequest {
@@ -15,8 +15,7 @@ public class RegisterRequest {
     @Size(min = 6, max = 100, message = "Password must have at least 6 characters")
     private String password;
 
-    @NotBlank(message = "Role cannot be empty")
-    @Pattern(regexp = "ADMIN|USER", message = "Role must be ADMIN or USER")
+    @NotNull (message = "Role must be ADMIN or USER")
     private Role role;
 
     public String getUsername() { return username; }
