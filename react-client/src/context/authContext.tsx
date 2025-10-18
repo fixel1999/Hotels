@@ -40,8 +40,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		}
 	}, []);
 
-	const userRegister = (registerFormData: RegisterFormData) => {
-		register(registerFormData);
+	const userRegister = async (registerFormData: RegisterFormData) => {
+		await register(registerFormData);
 	}
 
 	const userLogin = async (loginDataForm: LoginFormData) => {
