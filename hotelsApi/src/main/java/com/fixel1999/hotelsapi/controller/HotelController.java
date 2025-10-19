@@ -41,7 +41,7 @@ public class HotelController {
     public ResponseEntity<Page<Hotel>> findByCity(@PathVariable String city,
                                   @RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "10") int size,
-                                  @RequestParam(defaultValue = "nombre") String sortBy,
+                                  @RequestParam(defaultValue = "id") String sortBy,
                                   @RequestParam(defaultValue = "asc") String sortDir) {
         Page<Hotel> hotels = hotelService.findByCity(city, page, size, sortBy, sortDir);
         return ResponseEntity.ok(hotels);
@@ -52,7 +52,6 @@ public class HotelController {
         return ResponseEntity.ok(hotelService.updateAddress(id, address));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         hotelService.delete(id);

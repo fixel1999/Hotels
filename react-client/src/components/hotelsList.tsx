@@ -25,6 +25,7 @@ import { IoTrash } from 'react-icons/io5';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { MdEdit } from 'react-icons/md';
 import { toaster } from './ui/toaster';
+import { AxiosError } from 'axios';
 
 const saira = Saira({
 	subsets: ['latin']
@@ -50,21 +51,34 @@ const NothingToShow = () => {
 
 const DeleteHotel = ({ hotel }: { hotel: HotelDTO }) => {
 	const { user } = useAuth();
-	const [loading, setLoading] = useState(false)
-	const { open, setOpen } = useDisclosure()
-	const { fetchHotels, pageInfo } = useLoading()
+	const [loading, setLoading] = useState(false);
+	const { open, setOpen } = useDisclosure();
+	const { fetchHotels, pageInfo } = useLoading();
 
 	const handleDeleteHotel = async () => {
 		setLoading(true)
-		await hotelService.delete(hotel.id)
-		setOpen(false);
-		await fetchHotels(pageInfo.pageNumber, pageInfo.pageSize)
-		toaster.create({
-			title: "Success",
-			description: "Hotel deleted successfully",
-			type: "success",
-			duration: 3000,
-		})
+		try {
+			await hotelService.delete(hotel.id)
+			setOpen(false);
+			await fetchHotels(pageInfo.pageNumber, pageInfo.pageSize)
+			toaster.create({
+				title: "Success",
+				description: "Hotel deleted successfully",
+				type: "success",
+				duration: 3000,
+			})
+			setLoading(false)
+		}
+		catch (e) {
+			const error = e as AxiosError;
+			toaster.create({
+				title: "Error",
+				description: "Error deleting hotel. " + (error?.message || "Unknown error"),
+				type: "error",
+				duration: 3000,
+			})
+			setLoading(false)
+		}
 	}
 
 	return (

@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Saira } from 'next/font/google';
 import { Controller, useForm } from 'react-hook-form'
 import { toaster } from './ui/toaster';
+import { AxiosError } from 'axios';
 
 const saira = Saira({
 	subsets: ['latin']
@@ -30,7 +31,8 @@ const Login = () => {
 				type: "success",
 				duration: 3000,
 			});
-		} catch (error) {
+		} catch (e) {
+			const error = e as AxiosError;
 			toaster.create({
 				title: "Error",
 				description: error?.message || "Unknown error",
@@ -120,7 +122,8 @@ const Register = () => {
 				type: "success",
 				duration: 3000,
 			});
-		} catch (error) {
+		} catch (e) {
+			const error = e as AxiosError;
 			toaster.create({
 				title: "Error",
 				description: error?.message || "Unknown error",

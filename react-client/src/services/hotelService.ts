@@ -28,8 +28,7 @@ export const hotelService = {
     },
 
     delete: async (id: number): Promise<void> => {
-        console.log(id)
-        await api.delete(`/hotels/${id}`);
+        await api.delete(`/hotels/delete/${id}`);
     },
 
     findByCity: async (city: string, page = 0, size = 5, sortBy = 'id', sortDir = 'asc'): Promise<PagedResponse<HotelDTO>> => {

@@ -10,6 +10,7 @@ import { hotelService } from '@/services/hotelService'
 import { HotelDTO } from '@/types/hotel'
 import { useLoading } from '@/context/loadingContext'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
+import { AxiosError } from 'axios'
 
 const saira = Saira({
 	subsets: ['latin']
@@ -58,7 +59,8 @@ const CreateHotel = () => {
 			setOpen(false)
 			hideLoading()
 		}
-		catch (error) {
+		catch (e) {
+			const error = e as AxiosError;
 			toaster.create({
 				title: "Error",
 				description: error?.message || "Unknown error",
