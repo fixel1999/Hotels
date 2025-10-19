@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				hideLoading();
 			}
 		}
+		hideLoading();
 	}, []);
 
 	const userRegister = async (registerFormData: RegisterFormData) => {

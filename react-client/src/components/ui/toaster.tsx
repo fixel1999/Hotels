@@ -9,20 +9,26 @@ import {
   Toast,
   createToaster,
 } from '@chakra-ui/react'
+import { Saira } from 'next/font/google'
 
 export const toaster = createToaster({
   placement: 'bottom-end',
   pauseOnPageIdle: true,
 })
 
+const saira = Saira({
+  subsets: ['latin']
+})
+
 export const Toaster = () => {
   return (
     <Portal>
-      <ChakraToaster toaster={toaster} insetInline={{ mdDown: '4' }}>
+      <ChakraToaster toaster={toaster} insetInline={{ mdDown: '4' }} className={saira.className}>
         {(toast) => (
           <Toast.Root width={{ md: 'sm' }}>
             <Flex
               alignItems={"center"}
+              gap={2}
               ml={2}
             >
               {toast.type === 'loading' ? (
@@ -31,14 +37,14 @@ export const Toaster = () => {
                 <Toast.Indicator />
               )}
               <Stack
-                gap='1'
+                gap={1}
                 flex='1'
                 maxWidth='100%'
                 p={2}
               >
-                {toast.title && <Toast.Title>{toast.title}</Toast.Title>}
+                {toast.title && <Toast.Title fontSize={'xl'}>{toast.title}</Toast.Title>}
                 {toast.description && (
-                  <Toast.Description>{toast.description}</Toast.Description>
+                  <Toast.Description fontSize={'lg'}>{toast.description}</Toast.Description>
                 )}
               </Stack>
               {toast.action && (

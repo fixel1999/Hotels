@@ -172,11 +172,11 @@ const Register = () => {
 							<Controller
 								control={control}
 								name="role"
-								render={({ field: { value, onChange } }) => (
+								render={({ field: { onChange } }) => (
 									<Switch.Root>
 										<Switch.HiddenInput
-											checked={value === "ADMIN"}
-											onChange={e => onChange(e.target.checked ? "ADMIN" : "USER")}
+											onChange={e => onChange(e.target.checked ? "ADMIN" : "USER")
+											}
 										/>
 										<Switch.Control />
 									</Switch.Root>

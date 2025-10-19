@@ -30,7 +30,8 @@ const CreateHotel = () => {
 		try {
 			await createHotel(data);
 			toaster.create({
-				title: "Logged in successfully",
+				title: "Success!",
+				description: "Hotel created successfully",
 				type: "success",
 				duration: 3000,
 			});
