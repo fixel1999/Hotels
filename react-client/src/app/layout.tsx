@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
 import { AuthProvider } from "@/context/authContext";
-import { LightMode } from "@/components/ui/color-mode";
+import { LoadingProvider } from "@/context/loadingContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +29,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Provider>
-          <AuthProvider>
-            <LightMode>
+          <LoadingProvider>
+            <AuthProvider>
               {children}
-            </LightMode>
-          </AuthProvider>
+            </AuthProvider>
+          </LoadingProvider>
         </Provider>
       </body>
     </html>

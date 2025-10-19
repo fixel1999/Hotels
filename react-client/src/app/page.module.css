@@ -159,9 +159,3 @@ a.secondary {
     justify-content: center;
   }
 }
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
-}
