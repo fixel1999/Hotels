@@ -6,8 +6,16 @@ export interface AddressDTO {
 }
 
 export interface HotelDTO {
-    id?: number;
+    id: number;
     name: string;
     category: number;
     address: AddressDTO;
+}
+
+export interface PagedResponse<T> {
+    content: T[];
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
 }

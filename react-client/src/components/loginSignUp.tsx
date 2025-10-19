@@ -81,7 +81,7 @@ const Login = () => {
 				</Fieldset.Root>
 
 				<Button
-					colorScheme="teal"
+					colorPalette={'green'}
 					loading={isSubmitting}
 					type="submit"
 					width="full"
@@ -189,7 +189,7 @@ const Register = () => {
 				</Fieldset.Root>
 
 				<Button
-					colorScheme="teal"
+					colorPalette={'green'}
 					loading={isSubmitting}
 					type="submit"
 					width="full"

@@ -2,6 +2,7 @@ package com.fixel1999.hotelsapi.controller;
 
 import com.fixel1999.hotelsapi.model.Address;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +29,22 @@ public class HotelController {
     }
 
     @GetMapping
-    public List<Hotel> listHotels() {
-        return hotelService.getAll();
+    public ResponseEntity<Page<Hotel>> listHotels(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size,
+                                                  @RequestParam(defaultValue = "id") String sortBy,
+                                                  @RequestParam(defaultValue = "asc") String sortDir) {
+        Page<Hotel> hotels = hotelService.getAll(page, size, sortBy, sortDir);
+        return ResponseEntity.ok(hotels);
     }
 
     @GetMapping("/findByCity/{city}")
-    public List<Hotel> findByCity(@PathVariable String city) {
-        return hotelService.findByCity(city);
+    public ResponseEntity<Page<Hotel>> findByCity(@PathVariable String city,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "10") int size,
+                                  @RequestParam(defaultValue = "nombre") String sortBy,
+                                  @RequestParam(defaultValue = "asc") String sortDir) {
+        Page<Hotel> hotels = hotelService.findByCity(city, page, size, sortBy, sortDir);
+        return ResponseEntity.ok(hotels);
     }
 
     @PutMapping("/updateAddress/{id}")

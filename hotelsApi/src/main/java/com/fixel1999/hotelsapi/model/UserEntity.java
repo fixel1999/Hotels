@@ -27,7 +27,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_" + role.name());
+        return List.of(() -> role.name());
     }
 
     @Override public boolean isAccountNonExpired() { return true; }

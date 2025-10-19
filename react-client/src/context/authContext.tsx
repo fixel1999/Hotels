@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [user, setUser] = useState<AuthUser | null>(null);
 	const { register, login, logout } = authService;
-	const { hideLoading } = useLoading();
+	const { hideLoading, fetchHotels } = useLoading();
 
 	useEffect(() => {
 		const token = localStorage.getItem('token');
@@ -39,19 +39,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 						role: decoded.role,
 						token: token
 					});
+					fetchHotels();
 				}
 				else {
 					localStorage.removeItem('token');
 					localStorage.removeItem('tokenExpiry')
+					hideLoading();
 				}
-				hideLoading();
 			} catch {
 				localStorage.removeItem('token');
 				localStorage.removeItem('tokenExpiry')
 				hideLoading();
 			}
-		}
-		hideLoading();
+		} else hideLoading();
 	}, []);
 
 	const userRegister = async (registerFormData: RegisterFormData) => {

@@ -22,6 +22,5 @@ api.interceptors.request.use((config) => {
             config.headers.Authorization = `Bearer ${token}`;
         }
     }
-    console.log(config)
     return config;
 });
