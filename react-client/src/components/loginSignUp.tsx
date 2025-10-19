@@ -54,7 +54,7 @@ const Login = () => {
 			mt={10}
 		>
 			<VStack gap={4}>
-				<Heading size="md">	Welcome back!</Heading>
+				<Heading size="xl">	Welcome back!</Heading>
 				<Fieldset.Root>
 					<Fieldset.Content>
 						<Field.Root invalid={!!errors.username}>
@@ -96,6 +96,7 @@ const Login = () => {
 const Register = () => {
 	const {
 		register,
+		reset,
 		handleSubmit,
 		control,
 		formState: { errors, isSubmitting },
@@ -112,6 +113,7 @@ const Register = () => {
 	const handleRegister = async (data: RegisterFormData) => {
 		try {
 			await userRegister(data);
+			reset();
 			toaster.create({
 				title: "Signed up successfully.",
 				description: "You can now log in with your credentials.",
@@ -142,7 +144,7 @@ const Register = () => {
 			mt={10}
 		>
 			<VStack gap={4}>
-				<Heading size="md">	Welcome back!</Heading>
+				<Heading size="xl">	Join us!</Heading>
 				<Fieldset.Root>
 					<Fieldset.Content>
 						<Field.Root invalid={!!errors.username}>

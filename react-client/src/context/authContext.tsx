@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { AuthUser } from '@/types/user';
 import { authService } from '@/services/authService';
 import { LoginFormData, RegisterFormData } from '@/validation/authSchema';
+import { useLoading } from './loadingContext';
 
 interface AuthContextType {
 	user: AuthUser | null;
@@ -22,20 +23,32 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [user, setUser] = useState<AuthUser | null>(null);
 	const { register, login, logout } = authService;
+	const { hideLoading } = useLoading();
 
 	useEffect(() => {
 		const token = localStorage.getItem('token');
-		if (token) {
+		const expToken = localStorage.getItem('tokenExpiry')
+		if (token && expToken) {
 			try {
 				const decoded = jwtDecode(token);
-				setUser({
-					username: decoded.sub ? decoded.sub : "",
-					role: decoded.role,
-					token: token
-				});
+				const now = new Date();
+				const expiryDate = new Date(expToken)
+				if (now < expiryDate) {
+					setUser({
+						username: decoded.sub ? decoded.sub : "",
+						role: decoded.role,
+						token: token
+					});
+				}
+				else {
+					localStorage.removeItem('token');
+					localStorage.removeItem('tokenExpiry')
+				}
+				hideLoading();
 			} catch {
 				localStorage.removeItem('token');
 				localStorage.removeItem('tokenExpiry')
+				hideLoading();
 			}
 		}
 	}, []);
