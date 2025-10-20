@@ -6,18 +6,23 @@ import {
 	Box,
 	Button,
 	ButtonGroup,
+	Center,
 	CloseButton,
 	createListCollection,
 	Dialog,
+	Field,
+	Fieldset,
 	Heading,
 	HStack,
 	IconButton,
+	Input,
 	Pagination,
 	Portal,
 	Select,
 	Stack,
 	Table,
-	useDisclosure
+	useDisclosure,
+	VStack
 } from '@chakra-ui/react'
 import { Saira } from 'next/font/google';
 import React, { useCallback, useEffect, useState } from 'react'
@@ -26,6 +31,9 @@ import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { MdEdit } from 'react-icons/md';
 import { toaster } from './ui/toaster';
 import { AxiosError } from 'axios';
+import { addressSchema, AddressSchema } from '@/validation/hotelSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 const saira = Saira({
 	subsets: ['latin']
@@ -47,6 +55,158 @@ const NothingToShow = () => {
 			There is nothing to show. Tap + to create a new hotel or populate the DB.
 		</Heading>
 	</Box>
+}
+
+const EditAddress = ({ hotel }: { hotel: HotelDTO }) => {
+	const { open, setOpen } = useDisclosure();
+	const { fetchHotels, pageInfo } = useLoading();
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm<AddressSchema>({
+		resolver: zodResolver(addressSchema),
+		mode: 'onBlur',
+	});
+
+	const handleEdit = async (data: AddressSchema) => {
+		if (data.city !== hotel.address.city ||
+			data.country !== hotel.address.country ||
+			data.street !== hotel.address.street ||
+			data.zipCode !== hotel.address.zipCode) {
+
+			try {
+				await hotelService.updateAddress(hotel.id, data)
+				setOpen(false);
+				await fetchHotels(pageInfo.pageNumber, pageInfo.pageSize)
+				toaster.create({
+					title: "Success",
+					description: "Hotel address edited successfully",
+					type: "success",
+					duration: 3000,
+				})
+			} catch (e) {
+				const error = e as AxiosError;
+				toaster.create({
+					title: "Error",
+					description: "Error editing hotel address. " + (error?.message || "Unknown error"),
+					type: "error",
+					duration: 3000,
+				})
+			}
+		} else {
+			toaster.create({
+				title: "Error",
+				description: "Nothing to edit",
+				type: "error",
+				duration: 3000,
+			})
+		}
+
+	}
+
+	return (
+		<Dialog.Root
+			placement={"top"}
+			motionPreset={"slide-in-bottom"}
+			open={open}
+			onOpenChange={(e) => setOpen(e.open)}
+		>
+			<Dialog.Trigger asChild>
+				<IconButton
+					variant={'outline'}
+					colorPalette={'green'}
+				>
+					<MdEdit />
+				</IconButton>
+			</Dialog.Trigger>
+			<Portal>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content mt={10}>
+						<Dialog.CloseTrigger />
+						<Dialog.Body p={10} className={saira.className}>
+							<Center>
+								<Heading className={saira.className}>
+									{`${hotel.name} • ${hotel.category} stars`}
+								</Heading>
+							</Center>
+							<Box
+								as="form"
+								onSubmit={handleSubmit(handleEdit)}
+								p={6}
+								borderWidth="1px"
+								borderRadius="lg"
+								shadow="md"
+								bg="white"
+								maxW="sm"
+								mx="auto"
+								mt={10}
+							>
+								<VStack gap={4}>
+									<Fieldset.Root>
+										<Fieldset.Content>
+
+											<Field.Root invalid={!!errors.street}>
+												<Field.Label>Street</Field.Label>
+												<Input
+													defaultValue={hotel.address.street}
+													{...register("street")}
+													p={4}
+												/>
+												<Field.ErrorText>{errors.street?.message}</Field.ErrorText>
+											</Field.Root>
+
+											<Field.Root invalid={!!errors.city}>
+												<Field.Label>City</Field.Label>
+												<Input
+													defaultValue={hotel.address.city}
+													{...register("city")}
+													p={4}
+												/>
+												<Field.ErrorText>{errors.city?.message}</Field.ErrorText>
+											</Field.Root>
+
+											<Field.Root invalid={!!errors.country}>
+												<Field.Label>Country</Field.Label>
+												<Input
+													defaultValue={hotel.address.country}
+													{...register("country")}
+													p={4}
+												/>
+												<Field.ErrorText>{errors.country?.message}</Field.ErrorText>
+											</Field.Root>
+
+											<Field.Root invalid={!!errors.zipCode}>
+												<Field.Label>Zip Code</Field.Label>
+												<Input
+													defaultValue={hotel.address.zipCode}
+													{...register("zipCode")}
+													p={4}
+												/>
+												<Field.ErrorText>{errors.zipCode?.message}</Field.ErrorText>
+											</Field.Root>
+
+										</Fieldset.Content>
+									</Fieldset.Root>
+
+									<Button
+										colorPalette={'green'}
+										loading={isSubmitting}
+										type="submit"
+										width="full"
+									>
+										Edit Address
+									</Button>
+								</VStack>
+							</Box>
+						</Dialog.Body>
+						<Dialog.Footer />
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Portal>
+		</Dialog.Root>)
 }
 
 const DeleteHotel = ({ hotel }: { hotel: HotelDTO }) => {
@@ -178,12 +338,7 @@ const HotelsList = () => {
 							<Table.Cell px={4} textAlign={"center"}>{h.address.zipCode}</Table.Cell>
 							<Table.Cell align='center'>
 								<HStack gap={2} justifyContent={"center"} align={"center"}>
-									<IconButton
-										variant={'outline'}
-										colorPalette={'green'}
-									>
-										<MdEdit />
-									</IconButton>
+									<EditAddress hotel={h} />
 									<DeleteHotel hotel={h} />
 								</HStack>
 							</Table.Cell>
@@ -221,7 +376,6 @@ const HotelsList = () => {
 							)
 							}
 						/>
-
 						<Pagination.NextTrigger asChild>
 							<IconButton>
 								<LuChevronRight />

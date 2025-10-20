@@ -1,5 +1,5 @@
 import { api } from './api';
-import { HotelDTO, PagedResponse } from '@/types/hotel';
+import { AddressDTO, HotelDTO, PagedResponse } from '@/types/hotel';
 
 export const hotelService = {
     getAll: async (page = 0, size = 5, sortBy = 'id', sortDir = 'asc'): Promise<PagedResponse<HotelDTO>> => {
@@ -22,8 +22,8 @@ export const hotelService = {
         return response.data;
     },
 
-    updateAddress: async (id: number, address: HotelDTO['address']): Promise<HotelDTO> => {
-        const response = await api.put(`/updateAddress/${id}`, address);
+    updateAddress: async (id: number, address: AddressDTO): Promise<HotelDTO> => {
+        const response = await api.put(`hotels/updateAddress/${id}`, address);
         return response.data;
     },
 
