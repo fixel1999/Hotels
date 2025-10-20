@@ -10,8 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class HotelService {
 
@@ -51,7 +49,7 @@ public class HotelService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return hotelRepo.findByAddress_IgnoreCaseCity(city, pageable);
+        return hotelRepo.findByAddress_CityContainingIgnoreCase(city, pageable);
     }
 
     public Hotel updateAddress(Long id, Address address) {
