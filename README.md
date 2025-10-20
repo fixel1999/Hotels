@@ -171,7 +171,25 @@ DELETE /api/hotels/delete/{id}
 
 ---
 
-## 7. Sugerencias / Mejoras
+## 7. Testing
+
+Se pueden ejecutar los tests tanto del frontend como del backend de manera sencilla.
+
+### 7.1 Frontend
+
+```bash
+cd react-client
+npm run test
+```
+
+### 7.2 Backend
+
+```bash
+cd hotelsApi
+mvn test
+```
+
+## 8. Sugerencias / Mejoras
 
 - Mover `jwt.secret` a variables de entorno (no en `application.properties`) para mayor seguridad.
 - Añadir perfiles de Spring (`application-dev.properties`, `application-prod.properties`) y usar una base de datos persistente para producción (Postgres/MySQL).
