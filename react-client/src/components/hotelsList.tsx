@@ -328,7 +328,7 @@ const HotelsList = () => {
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{hotels.map((h) => (
+					{hotels?.map((h) => (
 						<Table.Row key={`${h.id}-${h.name}-${h.address.zipCode}`} >
 							<Table.Cell p={4}>{h.name}</Table.Cell>
 							<Table.Cell px={4} textAlign={"center"}>{h.category}</Table.Cell>
@@ -347,7 +347,7 @@ const HotelsList = () => {
 				</Table.Body>
 			</Table.Root>
 
-			{hotels.length === 0 && <NothingToShow />}
+			{hotels?.length === 0 && <NothingToShow />}
 
 
 			<HStack justifyContent={"space-between"}>

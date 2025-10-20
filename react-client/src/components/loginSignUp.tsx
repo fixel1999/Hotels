@@ -62,6 +62,7 @@ const Login = () => {
 						<Field.Root invalid={!!errors.username}>
 							<Field.Label>Username</Field.Label>
 							<Input
+								data-testid='login-username'
 								{...register("username")}
 								p={4}
 							/>
@@ -72,6 +73,7 @@ const Login = () => {
 						<Field.Root invalid={!!errors.password}>
 							<Field.Label>Password</Field.Label>
 							<Input
+								data-testid='login-password'
 								{...register("password")}
 								p={4}
 								type='password'
@@ -87,6 +89,7 @@ const Login = () => {
 					loading={isSubmitting}
 					type="submit"
 					width="full"
+					data-testid='login-button'
 				>
 					Log in
 				</Button>
@@ -196,6 +199,7 @@ const Register = () => {
 					loading={isSubmitting}
 					type="submit"
 					width="full"
+					name='sign-up'
 				>
 					Sign up
 				</Button>
@@ -208,6 +212,7 @@ const AuthDialog = () => {
 	return <Dialog.Root placement={"top"} motionPreset={"slide-in-bottom"}>
 		<Dialog.Trigger asChild>
 			<Button
+				data-testid='openLoginDialog'
 				variant="outline"
 				borderColor={"green.600"}
 				borderWidth={2}
