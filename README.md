@@ -195,3 +195,4 @@ mvn test
 - Añadir perfiles de Spring (`application-dev.properties`, `application-prod.properties`) y usar una base de datos persistente para producción (Postgres/MySQL).
 - Escribir tests unitarios e integrados adicionales para servicios y controladores.
 - Añadir manejo de errores más descriptivo en el API (códigos y cuerpos de error).
+- Añadir un panel de administración para la creación de usuarios con role de ADMIN.
