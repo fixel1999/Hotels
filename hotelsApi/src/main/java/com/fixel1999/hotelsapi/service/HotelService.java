@@ -33,23 +33,17 @@ public class HotelService {
         return hotelRepo.save(h);
     }
 
-    public Page<Hotel> getAll(int page, int size, String sortBy, String sortDir) {
+    public Page<Hotel> getAll(int page, int size, String sortBy, String sortDir, String city) {
         Sort sort = sortDir.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
 
         Pageable pageable = PageRequest.of(page, size, sort);
+
+        if(city != null && !city.isBlank())
+            return hotelRepo.findByAddress_CityContainingIgnoreCase(city, pageable);
+
         return hotelRepo.findAll(pageable);
-    }
-
-    public Page<Hotel> findByCity(String city, int page, int size, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return hotelRepo.findByAddress_CityContainingIgnoreCase(city, pageable);
     }
 
     public Hotel updateAddress(Long id, Address address) {

@@ -267,32 +267,7 @@ const CreateHotel = () => {
 }
 
 const FindByCity = () => {
-	const [value, setValue] = useState("")
-	const debouncedValue = useDebounce(value, 500)
-	const { showLoading, hideLoading, updateHotels, pageInfo, fetchHotels, updatePageInfo, sorting } = useLoading();
-
-	const handleFilterByCity = async () => {
-		showLoading()
-		if (debouncedValue.trim()) {
-			try {
-				const response = await hotelService.findByCity(
-					debouncedValue, pageInfo.pageNumber, pageInfo.pageSize, sorting.sortBy, sorting.sortDir);
-				updateHotels(response.content)
-				updatePageInfo(response)
-				hideLoading()
-			}
-			catch (e) {
-				console.log(e)
-				hideLoading()
-			}
-		} else {
-			await fetchHotels()
-		}
-	}
-
-	useEffect(() => {
-		handleFilterByCity()
-	}, [debouncedValue])
+	const { updateSearchValue } = useLoading();
 
 	return (
 		<InputGroup startElement={<IoSearch />} startElementProps={{ ml: 4, mr: 0, pr: 0 }}>
@@ -303,8 +278,7 @@ const FindByCity = () => {
 				rounded={'lg'}
 				p={4}
 				type='text'
-				value={value}
-				onChange={e => setValue(e.target.value)}
+				onChange={e => updateSearchValue(e.target.value)}
 			/>
 		</InputGroup>
 	)

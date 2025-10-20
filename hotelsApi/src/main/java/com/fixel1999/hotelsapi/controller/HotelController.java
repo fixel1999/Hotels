@@ -32,20 +32,12 @@ public class HotelController {
     public ResponseEntity<Page<Hotel>> listHotels(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size,
                                                   @RequestParam(defaultValue = "id") String sortBy,
-                                                  @RequestParam(defaultValue = "asc") String sortDir) {
-        Page<Hotel> hotels = hotelService.getAll(page, size, sortBy, sortDir);
+                                                  @RequestParam(defaultValue = "asc") String sortDir,
+                                                  @RequestParam(defaultValue = "") String city) {
+        Page<Hotel> hotels = hotelService.getAll(page, size, sortBy, sortDir, city);
         return ResponseEntity.ok(hotels);
     }
 
-    @GetMapping("/findByCity/{city}")
-    public ResponseEntity<Page<Hotel>> findByCity(@PathVariable String city,
-                                  @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "10") int size,
-                                  @RequestParam(defaultValue = "id") String sortBy,
-                                  @RequestParam(defaultValue = "asc") String sortDir) {
-        Page<Hotel> hotels = hotelService.findByCity(city, page, size, sortBy, sortDir);
-        return ResponseEntity.ok(hotels);
-    }
 
     @PutMapping("/updateAddress/{id}")
     public ResponseEntity<Hotel> updateAddress(@PathVariable Long id, @RequestBody Address address) {

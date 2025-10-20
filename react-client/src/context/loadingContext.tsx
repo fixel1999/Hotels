@@ -1,4 +1,5 @@
 "use client";
+import { useDebounce } from "@/hooks/useDebounce";
 import { hotelService } from "@/services/hotelService";
 import { HotelDTO, PagedResponse } from "@/types/hotel";
 import React, { createContext, useContext, useState, useCallback } from "react";
@@ -18,7 +19,8 @@ const LoadingContext = createContext({
 	updateHotels: (hotelsList: HotelDTO[]) => { },
 	updatePageInfo: (pagedInfo: PagedResponse<HotelDTO>) => { },
 	sorting: {} as Sorting,
-	updateSorting: (sorting: Sorting) => { }
+	updateSorting: (sorting: Sorting) => { },
+	updateSearchValue: (city: string) => { }
 });
 
 export function LoadingProvider({ children }: { children: React.ReactNode }) {
@@ -33,16 +35,20 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 		pageSize: 5
 	} as PagedResponse<HotelDTO>);
 
+	const [searchValue, setSearchValue] = useState("")
+	const debouncedValue = useDebounce(searchValue, 500)
+
 	const showLoading = useCallback(() => setIsLoading(true), []);
 	const hideLoading = useCallback(() => setIsLoading(false), []);
 	const updateHotels = useCallback((hotelsList: HotelDTO[]) => setHotels(hotelsList), [])
 	const updatePageInfo = useCallback((pageInfo: PagedResponse<HotelDTO>) => setPageInfo(pageInfo), [])
 	const updateSorting = useCallback((sorting: Sorting) => setSorting(sorting), [])
+	const updateSearchValue = useCallback((city: string) => setSearchValue(city), [])
 
 	const fetchHotels = useCallback(async (page = 0, size = 5, sortBy = sorting.sortBy, sortDir = sorting.sortDir) => {
 		setIsLoading(true)
 		try {
-			const response = await hotelService.getAll(page, size, sortBy, sortDir);
+			const response = await hotelService.getAll(page, size, sortBy, sortDir, debouncedValue);
 			setHotels(response.content)
 			setPageInfo(response)
 			setIsLoading(false)
@@ -51,7 +57,7 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 			console.log(e)
 			setIsLoading(false)
 		}
-	}, [sorting.sortBy, sorting.sortDir])
+	}, [sorting.sortBy, sorting.sortDir, debouncedValue])
 
 	return (
 		<LoadingContext.Provider
@@ -65,7 +71,8 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 				pageInfo,
 				updatePageInfo,
 				sorting,
-				updateSorting
+				updateSorting,
+				updateSearchValue
 			}}>
 			{children}
 		</LoadingContext.Provider>
