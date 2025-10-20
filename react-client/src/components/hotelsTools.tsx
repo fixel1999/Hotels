@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { hotelSchema, HotelSchema } from '@/validation/hotelSchema'
-import { Box, Button, Dialog, Field, Fieldset, Heading, HStack, IconButton, Input, Portal, useDisclosure, VStack } from '@chakra-ui/react'
+import { Box, Button, Dialog, Field, Fieldset, Heading, HStack, IconButton, Input, InputAddon, InputGroup, Menu, Portal, useDisclosure, VStack } from '@chakra-ui/react'
 import { Saira } from 'next/font/google'
 import { IoAdd, IoSearch } from 'react-icons/io5'
 import { toaster } from './ui/toaster'
@@ -11,10 +11,82 @@ import { HotelDTO } from '@/types/hotel'
 import { useLoading } from '@/context/loadingContext'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
 import { AxiosError } from 'axios'
+import { useDebounce } from '@/hooks/useDebounce'
+import { TbForbid, TbSortAscendingLetters, TbSortAscendingNumbers, TbSortDescending, TbSortDescendingLetters, TbSortDescendingNumbers } from 'react-icons/tb'
 
 const saira = Saira({
 	subsets: ['latin']
 })
+
+interface SortingOptions {
+	key: 'id-asc' | 'name-asc' | 'name-desc' | 'category-asc' | 'category-desc';
+	value: string;
+	icon: React.ReactNode;
+}
+
+const SortBy = () => {
+	const sortingOptions: SortingOptions[] = [
+		{
+			key: "id-asc",
+			value: "None",
+			icon: <TbForbid />,
+		},
+		{
+			key: "name-asc",
+			value: "Name asc",
+			icon: <TbSortAscendingLetters />
+		},
+		{
+			key: "name-desc",
+			value: "Name Desc",
+			icon: <TbSortDescendingLetters />
+		},
+		{
+			key: "category-asc",
+			value: "Stars Asc",
+			icon: <TbSortAscendingNumbers />
+		},
+		{
+			key: "category-desc",
+			value: "Stars Desc",
+			icon: <TbSortDescendingNumbers />
+		}
+	]
+
+	const { updateSorting } = useLoading()
+
+	const handleUpdateSorting = (sorting: string) => {
+		const [sortBy, sortDir] = sorting.split('-');
+		updateSorting({ sortBy, sortDir })
+	}
+
+	return (
+		<Menu.Root>
+			<Menu.Trigger asChild>
+				<IconButton
+					variant={"outline"}
+				>
+					<TbSortDescending />
+				</IconButton>
+			</Menu.Trigger>
+			<Portal>
+				<Menu.Positioner>
+					<Menu.Content fontSize={'lg'} className={saira.className} w={40}>
+						{sortingOptions.map(sort =>
+							<Menu.Item
+								key={sort.key}
+								value={sort.key}
+								p={2} fontSize={'md'}
+								onClick={() => handleUpdateSorting(sort.key)}
+							>
+								{sort.icon}{sort.value}
+							</Menu.Item>
+						)}
+					</Menu.Content>
+				</Menu.Positioner>
+			</Portal>
+		</Menu.Root>)
+}
 
 const CreateHotel = () => {
 	const {
@@ -189,6 +261,50 @@ const CreateHotel = () => {
 		</Portal>
 	</Dialog.Root>
 
+}
+
+const FindByCity = () => {
+	const [value, setValue] = useState("")
+	const debouncedValue = useDebounce(value, 500)
+	const { showLoading, hideLoading, updateHotels, pageInfo, fetchHotels, updatePageInfo, sorting } = useLoading();
+
+	const handleFilterByCity = async () => {
+		showLoading()
+		if (debouncedValue.trim()) {
+			try {
+				const response = await hotelService.findByCity(
+					debouncedValue, pageInfo.pageNumber, pageInfo.pageSize, sorting.sortBy, sorting.sortDir);
+				updateHotels(response.content)
+				updatePageInfo(response)
+				hideLoading()
+			}
+			catch (e) {
+				console.log(e)
+				hideLoading()
+			}
+		} else {
+			await fetchHotels()
+		}
+	}
+
+	useEffect(() => {
+		handleFilterByCity()
+	}, [debouncedValue])
+
+	return (
+		<InputGroup startElement={<IoSearch />} startElementProps={{ ml: 4, mr: 0, pr: 0 }}>
+			<Input
+				placeholder='Type to search...'
+				colorPalette={"green"}
+				variant={"outline"}
+				rounded={'lg'}
+				p={4}
+				type='text'
+				value={value}
+				onChange={e => setValue(e.target.value)}
+			/>
+		</InputGroup>
+	)
 }
 
 const PopulateDb = ({ data }: { data: HotelDTO[] }) => {
@@ -465,17 +581,8 @@ const HotelTools = () => {
 			<HStack gap={2}>
 				<PopulateDb data={fakeHotels} />
 				<CreateHotel />
-				<IconButton
-					variant={'outline'}>
-					<IoSearch />
-				</IconButton>
-				<Button
-					variant={'outline'}
-					p={2}
-					className={saira.className}
-				>
-					Sort By
-				</Button>
+				<SortBy />
+				<FindByCity />
 			</HStack>
 
 		</HStack>
