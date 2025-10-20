@@ -18,6 +18,7 @@ import {
 	Input,
 	Pagination,
 	Portal,
+	RatingGroup,
 	Select,
 	Stack,
 	Table,
@@ -127,11 +128,22 @@ const EditAddress = ({ hotel }: { hotel: HotelDTO }) => {
 					<Dialog.Content mt={10}>
 						<Dialog.CloseTrigger />
 						<Dialog.Body p={10} className={saira.className}>
-							<Center>
+							<VStack>
 								<Heading className={saira.className}>
-									{`${hotel.name} • ${hotel.category} stars`}
+									{`${hotel.name}`}
 								</Heading>
-							</Center>
+								<RatingGroup.Root
+									readOnly ml={2}
+									count={5}
+									defaultValue={hotel.category}
+									size="lg"
+									alignContent={"center"}
+									colorPalette={"yellow"}
+								>
+									<RatingGroup.HiddenInput />
+									<RatingGroup.Control />
+								</RatingGroup.Root>
+							</VStack>
 							<Box
 								as="form"
 								onSubmit={handleSubmit(handleEdit)}
@@ -331,7 +343,17 @@ const HotelsList = () => {
 					{hotels?.map((h) => (
 						<Table.Row key={`${h.id}-${h.name}-${h.address.zipCode}`} >
 							<Table.Cell p={4}>{h.name}</Table.Cell>
-							<Table.Cell px={4} textAlign={"center"}>{h.category}</Table.Cell>
+							<Table.Cell px={4} textAlign={"center"}><RatingGroup.Root
+								readOnly ml={2}
+								count={5}
+								defaultValue={h.category}
+								size="lg"
+								alignContent={"center"}
+								colorPalette={"yellow"}
+							>
+								<RatingGroup.HiddenInput />
+								<RatingGroup.Control />
+							</RatingGroup.Root></Table.Cell>
 							<Table.Cell px={4}>{h.address.street}</Table.Cell>
 							<Table.Cell px={4}>{h.address.city}</Table.Cell>
 							<Table.Cell px={4} textAlign={"center"}>{h.address.country}</Table.Cell>

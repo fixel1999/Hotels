@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { hotelSchema, HotelSchema } from '@/validation/hotelSchema'
-import { Box, Button, Dialog, Field, Fieldset, Heading, HStack, IconButton, Input, InputAddon, InputGroup, Menu, Portal, useDisclosure, VStack } from '@chakra-ui/react'
+import { Box, Button, Dialog, Field, Fieldset, Heading, HStack, IconButton, Input, InputAddon, InputGroup, Menu, Portal, RatingGroup, useDisclosure, VStack } from '@chakra-ui/react'
 import { Saira } from 'next/font/google'
 import { IoAdd, IoSearch } from 'react-icons/io5'
 import { toaster } from './ui/toaster'
@@ -195,13 +195,16 @@ const CreateHotel = () => {
 
 										<Field.Root invalid={!!errors.category}>
 											<Field.Label>Category</Field.Label>
-											<Input
-												{...register("category", { valueAsNumber: true })}
-												p={4}
-												type='number'
-												min={1}
-												max={5}
-											/>
+											<RatingGroup.Root
+												count={5}
+												size={'lg'}
+												colorPalette={"yellow"}
+											>
+												<RatingGroup.HiddenInput
+													{...register("category", { valueAsNumber: true })}
+												/>
+												<RatingGroup.Control />
+											</RatingGroup.Root>
 											<Field.ErrorText>{errors.category?.message}</Field.ErrorText>
 										</Field.Root>
 
