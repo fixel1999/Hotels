@@ -6,7 +6,6 @@ import {
 	Box,
 	Button,
 	ButtonGroup,
-	Center,
 	CloseButton,
 	createListCollection,
 	Dialog,
