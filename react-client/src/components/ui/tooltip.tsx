@@ -1,4 +1,5 @@
 import { Tooltip as ChakraTooltip, Portal } from "@chakra-ui/react"
+import { Saira } from "next/font/google"
 import * as React from "react"
 
 export interface TooltipProps extends ChakraTooltip.RootProps {
@@ -9,6 +10,8 @@ export interface TooltipProps extends ChakraTooltip.RootProps {
   contentProps?: ChakraTooltip.ContentProps
   disabled?: boolean
 }
+
+const saira = Saira({ subsets: ['latin'] })
 
 export const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
   function Tooltip(props, ref) {
@@ -30,7 +33,7 @@ export const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
         <ChakraTooltip.Trigger asChild>{children}</ChakraTooltip.Trigger>
         <Portal disabled={!portalled} container={portalRef}>
           <ChakraTooltip.Positioner>
-            <ChakraTooltip.Content ref={ref} {...contentProps}>
+            <ChakraTooltip.Content ref={ref} {...contentProps} p={2} className={saira.className} fontSize={'sm'}>
               {showArrow && (
                 <ChakraTooltip.Arrow>
                   <ChakraTooltip.ArrowTip />
