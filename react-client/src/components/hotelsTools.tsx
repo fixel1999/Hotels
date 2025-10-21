@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { hotelSchema, HotelSchema } from '@/validation/hotelSchema'
-import { Box, Button, Dialog, Field, Fieldset, Heading, HStack, IconButton, Input, InputAddon, InputGroup, Menu, Portal, RatingGroup, useDisclosure, VStack } from '@chakra-ui/react'
+import { Box, Button, Dialog, Field, Fieldset, Heading, HStack, IconButton, Input, InputGroup, Menu, Portal, RatingGroup, useDisclosure, VStack } from '@chakra-ui/react'
 import { Saira } from 'next/font/google'
 import { IoAdd, IoSearch } from 'react-icons/io5'
 import { toaster } from './ui/toaster'
@@ -11,8 +11,8 @@ import { HotelDTO } from '@/types/hotel'
 import { useLoading } from '@/context/loadingContext'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
 import { AxiosError } from 'axios'
-import { useDebounce } from '@/hooks/useDebounce'
 import { TbForbid, TbSortAscendingLetters, TbSortAscendingNumbers, TbSortDescending, TbSortDescendingLetters, TbSortDescendingNumbers } from 'react-icons/tb'
+import { Tooltip } from './ui/tooltip'
 
 const saira = Saira({
 	subsets: ['latin']
@@ -66,7 +66,9 @@ const SortBy = () => {
 				<IconButton
 					variant={"outline"}
 				>
-					<TbSortDescending />
+					<Tooltip content="Sort By">
+						<TbSortDescending />
+					</Tooltip>
 				</IconButton>
 			</Menu.Trigger>
 			<Portal>
@@ -85,7 +87,7 @@ const SortBy = () => {
 					</Menu.Content>
 				</Menu.Positioner>
 			</Portal>
-		</Menu.Root>)
+		</Menu.Root >)
 }
 
 const CreateHotel = () => {
@@ -153,10 +155,12 @@ const CreateHotel = () => {
 		onOpenChange={(e) => setOpen(e.open)}
 	>
 		<Dialog.Trigger asChild>
-			<IconButton onClick={() => setOpen(true)}
-				variant={'outline'}>
-				<IoAdd />
-			</IconButton>
+			<Tooltip content="Create new hotel">
+				<IconButton onClick={() => setOpen(true)}
+					variant={'outline'}>
+					<IoAdd />
+				</IconButton>
+			</Tooltip>
 		</Dialog.Trigger>
 		<Portal>
 			<Dialog.Backdrop />
@@ -272,7 +276,8 @@ const FindByCity = () => {
 	return (
 		<InputGroup startElement={<IoSearch />} startElementProps={{ ml: 4, mr: 0, pr: 0 }}>
 			<Input
-				placeholder='Type to search...'
+				placeholder='Type to search by city...'
+				style={saira.style}
 				colorPalette={"green"}
 				variant={"outline"}
 				rounded={'lg'}
@@ -311,12 +316,14 @@ const PopulateDb = ({ data }: { data: HotelDTO[] }) => {
 		hideLoading()
 	}
 
-	return <IconButton
-		variant={"outline"}
-		onClick={handlePopulateDb}
-	>
-		<BsDatabaseFillAdd />
-	</IconButton>
+	return <Tooltip content="Populate the DB with 20 hotels">
+		<IconButton
+			variant={"outline"}
+			onClick={handlePopulateDb}
+		>
+			<BsDatabaseFillAdd />
+		</IconButton>
+	</Tooltip>
 }
 
 const HotelTools = () => {

@@ -35,6 +35,7 @@ import { AxiosError } from 'axios';
 import { addressSchema, AddressSchema } from '@/validation/hotelSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Tooltip } from './ui/tooltip';
 
 const saira = Saira({
 	subsets: ['latin']
@@ -119,7 +120,9 @@ const EditAddress = ({ hotel }: { hotel: HotelDTO }) => {
 					variant={'outline'}
 					colorPalette={'green'}
 				>
-					<MdEdit />
+					<Tooltip content="Edit hotel address">
+						<MdEdit />
+					</Tooltip>
 				</IconButton>
 			</Dialog.Trigger>
 			<Portal>
@@ -265,7 +268,9 @@ const DeleteHotel = ({ hotel }: { hotel: HotelDTO }) => {
 					colorPalette={'red'}
 					disabled={user?.role !== 'ADMIN'}
 				>
-					<IoTrash />
+					<Tooltip content="Delete hotel">
+						<IoTrash />
+					</Tooltip>
 				</IconButton>
 			</Dialog.Trigger>
 			<Portal>
